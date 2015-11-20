@@ -3,6 +3,8 @@
 __author__ = 'xiaowang'
 __date__ = '19/11/15'
 
+"""节点类"""
+
 
 class Node(object):
     def __init__(self, data):
@@ -12,6 +14,7 @@ class Node(object):
 
 class LinkedList(object):
     def __init__(self):
+        """初始化链表"""
         self.head = None
 
     """获取链表长度"""
@@ -32,6 +35,12 @@ class LinkedList(object):
     """追加节点"""
 
     def append(self, data):
+        """
+        1.head 为none :head-->node
+        2.tail.nex-->node
+        :param data:
+        :return:
+        """
         node = Node(data)
         if self.head is None:
             self.head = node
@@ -44,6 +53,16 @@ class LinkedList(object):
     """插入节点"""
 
     def insert(self, index, data):
+        """
+        1.index 插入节点位置包括正负数
+        2.找到index-1-->pre_node的节点
+        3.pre_node.next-->node
+          node.next-->pre_node.next.next
+        4.head
+        :param index:
+        :param data:
+        :return:
+        """
         node = Node(data)
         if abs(index + 1) > len(self):
             return False
@@ -86,6 +105,10 @@ class LinkedList(object):
     """获取节点"""
 
     def get(self, index):
+        """
+        :param index:
+        :return:
+        """
         index = index if index >= 0 else len(self) + index
         if len(self) < index or index < 0:
             return None
