@@ -14,72 +14,104 @@ class Node(object):
 
 
 class Tree(object):
-    def __init__(self, data):
-        self.data = data
-        self.left_child = None
-        self.right_child = None
+    def __init__(self):
+        self.root = Node()
 
-    def insert_left(self, data):
-        self.left_child = Tree(data)
-        return self.left_child
+    """递归实现前序遍历"""
 
-    def insert_right(self, data):
-        self.right_child = Tree(data)
-        return self.right_child
+    def rec_pre_order(self, node=None):
+        if node:
+            print(node.data, end=" ")
+            self.rec_pre_order(node.left_child)
+            self.rec_pre_order(node.right_child)
 
-    def print_data(self):
-        print(self.data, end="")
+    """非递归实现前序遍历"""
 
-    """前序遍历"""
-
-    @staticmethod
-    def dlr(node):
-        if node.data:
-            node.print_data()
-            if node.left_child:
-                Tree.dlr(node.left_child)
+    def pre_order(self):
+        ls = []
+        if self.root:
+            ls.append(self.root)
+        while len(ls):
+            node = ls.pop()
+            print(node.data)
             if node.right_child:
-                Tree.dlr(node.right_child)
-
-    """中序遍历"""
-
-    @staticmethod
-    def ldr(node):
-        if node.data:
+                ls.append(node.right_child)
             if node.left_child:
-                Tree.ldr(node.left_child)
-            node.print_data()
-            if node.right_child:
-                Tree.ldr(node.right_child)
+                ls.append(node.left_child)
+
+    """递归实现中序遍历"""
+
+    def rec_in_order(self, node):
+        if node:
+            self.rec_in_order(node.left_child)
+            print(node.data, end=" ")
+            self.rec_in_order(node.right_child)
+
+    def in_order(self):
+        ls = []
+        node = self.root
+        while node or len(ls):
+            while node:
+                ls.append(node)
+                node = node.left_child
+            if len(ls):
+                node = ls.pop()
+                print(node.data, end=" ")
+                node = node.right_child
 
     """后序遍历"""
 
-    @staticmethod
-    def lrd(node):
-        if node.data:
-            if node.left_child:
-                Tree.ldr(node.left_child)
-            if node.right_child:
-                Tree.ldr(node.right_child)
-            node.print_data()
+    def rec_post_order(self, node):
+        if node:
+            self.rec_post_order(node.left_child)
+            self.rec_post_order(node.right_child)
+            print(node.data, end=" ")
+
+
+
+
+    """计算树的深度"""
+
+    def get_depth(self):
+        """
+        递归树的左右节点,取值大的深度
+        :return:
+        """
+
+        def _depth(node):
+            if not node:
+                return 0
+            else:
+                left_depth = _depth(node.left_child)
+                right_depth = _depth(node.right_child)
+                return left_depth + 1 if left_depth > right_depth else right_depth + 1
+
+        return _depth(self.root)
+
+    def get_leaves(self):
+        pass
 
 
 if __name__ == '__main__':
-    root = Tree('A')
-    B = root.insert_left('B')
-    C = root.insert_right('C')
-    D = B.insert_left('D')
-    E = B.insert_right('E')
-    F = D.insert_left('F')
-    G = C.insert_left('G')
-    H = C.insert_right('H')
-    I = G.insert_left('I')
-    K = I.insert_left('K')
-    J = H.insert_right('J')
-    L = J.insert_left('L')
+    tree = Tree()
+    tree.root = Node('A')
+    tree.root.left_child = Node('B')
+    tree.root.right_child = Node('C')
+    tree.root.left_child.left_child = Node('D')
+    tree.root.left_child.right_child = Node('E')
+    tree.root.left_child.right_child.right_child = Node('F')
+    tree.root.left_child.left_child.right_child = Node('G')
 
-    Tree.dlr(root)
+    # tree.rec_pre_order(tree.root)
+    # print()
+
+    # tree.rec_in_order(tree.root)
+    # print()
+    # tree.in_order()
+    tree.rec_post_order(tree.root)
     print()
-    Tree.ldr(root)
-    print()
-    Tree.lrd(root)
+    tree.post_order()
+    # print(root.data)
+    # root.
+    # print(tree.get_depth())
+    # tree.pre_order()
