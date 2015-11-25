@@ -28,16 +28,28 @@ class Tree(object):
     """非递归实现前序遍历"""
 
     def pre_order(self):
-        ls = []
+
         if self.root:
-            ls.append(self.root)
-        while len(ls):
+            ls = [self.root]
+        while ls:
             node = ls.pop()
-            print(node.data)
+            print(node.data, end=" ")
             if node.right_child:
                 ls.append(node.right_child)
             if node.left_child:
                 ls.append(node.left_child)
+
+    def pre_order2(self):
+        stack = []
+        node = self.root
+        while node or stack:
+            while node:
+                print(node.data, end=" ")
+                stack.append(node)
+                node = node.left_child
+            if stack:
+                node = stack.pop()
+                node = node.right_child
 
     """递归实现中序遍历"""
 
@@ -46,6 +58,8 @@ class Tree(object):
             self.rec_in_order(node.left_child)
             print(node.data, end=" ")
             self.rec_in_order(node.right_child)
+
+    """非递归实现中序遍历"""
 
     def in_order(self):
         ls = []
@@ -59,6 +73,25 @@ class Tree(object):
                 print(node.data, end=" ")
                 node = node.right_child
 
+    def in_order2(self):
+        stack = []
+        node = self.root
+        while node:
+            while node:
+                if node.right_child:
+                    stack.append(node.right_child)
+                stack.append(node)
+                node = node.left_child
+            node = stack.pop()
+            while stack and (not node.right_child):
+                print(node.data, end=" ")
+                node = stack.pop()
+            print(node.data, end=" ")
+            if stack:
+                node = stack.pop()
+            else:
+                node = None
+
     """后序遍历"""
 
     def rec_post_order(self, node):
@@ -67,8 +100,22 @@ class Tree(object):
             self.rec_post_order(node.right_child)
             print(node.data, end=" ")
 
+    def post_order(self, node):
+        q = node
+        ls = []
+        while node:
+            while node.left_child:
+                ls.append(node)
+                node = node.left_child
 
-
+            while node and (node.right_child is None or node.right_child == q):
+                print(node.data, end=" ")
+                q = node
+                if not ls:
+                    return
+                node = ls.pop()
+            ls.append(node)
+            node = node.right_child
 
     """计算树的深度"""
 
@@ -108,10 +155,19 @@ if __name__ == '__main__':
     # tree.rec_in_order(tree.root)
     # print()
     # tree.in_order()
-    tree.rec_post_order(tree.root)
-    print()
-    tree.post_order()
+    # tree.rec_pre_order(tree.root)
+    # print()
+    # tree.pre_order()
+    # print()
+    # tree.pre_order2()
     # print(root.data)
     # root.
     # print(tree.get_depth())
     # tree.pre_order()
+
+
+    tree.rec_in_order(tree.root)
+    print()
+    tree.in_order()
+    print()
+    tree.in_order2()
