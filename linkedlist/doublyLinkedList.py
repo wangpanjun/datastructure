@@ -1,4 +1,4 @@
-# encoding=utf-8
+# -*- coding: utf-8 -*-
 
 __author__ = 'xiaowang'
 __date__ = '19/11/15'
@@ -80,26 +80,34 @@ class DoublyLinkedList(object):
 
     """反转链表"""
 
-    def reverse(self):
-        node = self.head.next
+    def __reversed__(self):
+        """
+        1.node.next --> node.pre
+          node.pre --> node.next
+        2.head.next --> None
+          tail.pre --> None
+        3.head-->tail
+         tail-->head
+        :return:
+        """
+        pre_head = self.head
         tail = self.tail
-        while node is not tail :
-            pre_node = node.pre
-            next_node = node.next
-            node.pre = next_node
-            node.next = pre_node
-            node = next_node
-        a = 1 + 1
-        return '1'
-        # self.tail = self.head
-        # self.head = tail
 
+        def reverse(pre_node, node):
+            if node:
+                next_node = node.next
+                node.next = pre_node
+                pre_node.pre = node
+                if pre_node is self.head:
+                    pre_node.next = None
+                if node is self.tail:
+                    node.pre = None
+                return reverse(node, next_node)
+            else:
+                self.head = tail
+                self.tail = pre_head
 
-
-
-
-
-
+        return reverse(self.head, self.head.next)
 
     """获取链表长度"""
 
@@ -136,6 +144,11 @@ class DoublyLinkedList(object):
             node.data = data
         return node
 
+    """清空链表"""
+    def clear(self):
+        self.head.next = self.tail
+        self.tail.pre = self.head
+
     """打印链表"""
 
     def show(self, order=1):
@@ -169,11 +182,11 @@ if __name__ == '__main__':
     print(ls.get(0).data)
     ls.set(0, 10)
     ls.show()
-
     ls.insert(1, -2)
     ls.show()
     ls.delete(-2)
     ls.show()
-
-    ls.reverse()
+    reversed(ls)
+    ls.show()
+    ls.clear()
     ls.show()
